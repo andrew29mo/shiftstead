@@ -7,7 +7,7 @@ name = "shiftstead"
 version = "0.1.0"
 description = "Single-host HTTP deployments with health gates, draining and recovery"
 requires-python = ">=3.12"
-dependencies = ["aiohttp==3.14.5", "psutil==7.2.2"]
+dependencies = ["aiohttp==3.14.5", "psutil==7.2.2", "yarl==1.25.1"]
 
 [project.scripts]
 shiftstead = "rollout.__main__:main"

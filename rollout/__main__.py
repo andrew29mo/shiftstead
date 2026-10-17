@@ -29,24 +29,8 @@ async def serve(a):
         g = await c.submit(v['id'], v.get('spec'), r.path == '/rollback')
         return web.json_response({'generation': g}, status=202)
     async def stop(r):
-        async with c.mu:
-            if c.task:
-                c.task.cancel()
-            c.s['generation'] += 1
-            g = c.s['generation']
-            c.s['route'] = c.s['previous'] = None
-            c.store.save('stop_requested')
-        for wid in list(c.s['workers']):
-            await c.drain(g, wid, 1)
-            await c.stop_worker(wid, g)
-        async with c.mu:
-            if c.fence(g):
-                c.s['degraded'] = None
-                if c.s['operation']:
-                    c.phase('done', stopped=True)
-                else:
-                    c.store.save('stopped_all')
-        return web.json_response({'stopped': True})
+        stopped = await c.stop_all()
+        return web.json_response({'stopped': stopped}, status=200 if stopped else 409)
     admin = web.Application(middlewares=[auth], client_max_size=65536)
     admin.router.add_get('/status', status)
     admin.router.add_get('/history', history)

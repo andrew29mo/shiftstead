@@ -1,5 +1,6 @@
 """Real HTTP demo worker; failure knobs are for integration tests and demos."""
 import argparse
+import hashlib
 import asyncio
 import os
 import time
@@ -25,7 +26,7 @@ def main():
         delay = min(10, max(0, float(request.query.get('delay', 0))))
         await asyncio.sleep(delay)
         body = await request.read()
-        return web.json_response({'version': a.version, 'id': request.query.get('id'), 'bytes': len(body)})
+        return web.json_response({'version': a.version, 'id': request.query.get('id'), 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest(), 'raw_path': request.raw_path})
     async def stream(request):
         r = web.StreamResponse()
         await r.prepare(request)

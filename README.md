@@ -9,12 +9,13 @@ This is an early, local-first MVP for trusted operators and cooperative, statele
 ## What works
 
 - Real subprocess workers and an HTTP gateway; the same implementation runs in the CLI, integration tests and measurements.
-- Two consecutive identity-checked readiness successes before switching; two failures during the configured observation period trigger rollback.
+- Two consecutive identity-checked readiness successes from a complete bounded JSON response before switching; redirects are rejected and probes use a separate connection pool; two failures during the configured observation period trigger rollback.
 - Every gateway request keeps its selected revision until completion. Requests selected after the switch use the new revision, including requests on an existing client keep-alive connection.
 - Bounded draining; deadline expiry closes affected client connections and records forced interruptions. No automatic upstream retry.
 - The previous worker remains available for a configured rollback window. Manual rollback receives a new generation and fences superseded work.
 - SQLite WAL with synchronous FULL, idempotent operation IDs, a single controller owner lock, and process identity records written before worker exec.
-- On restart, inspect actual process identities and health before opening listeners. Keep the committed healthy route, fall back to a healthy retained route when available, and retire superseded workers. An uncertain launch outcome fails closed rather than blindly launching again.
+- On restart, inspect actual process identities and health before opening listeners. Keep the committed healthy route, fall back to a healthy retained route when available, and retire superseded workers. An uncertain launch outcome fails closed rather than blindly launching again. Preserving an old healthy route does not mark an uncommitted deployment successful.
+- Stop is a durable, generation-fenced operation: new deployments are rejected while draining/stopping; client disconnect does not cancel it, and restart completes its intent.
 - Authenticated loopback-only administration, request body/deadline/concurrency limits and real-process JSON/HTML evidence.
 
 ## Quick start
@@ -61,7 +62,7 @@ The controller injects `PORT` and `ROLLOUT_INSTANCE`. Readiness is an applicatio
 SHIFTSTEAD_EXECUTION=native-host .venv/bin/python -m tools.validate
 ```
 
-This runs formal tests, five isolated fault mutations, three rotated trials of each comparison mode, validates raw counts/timings/RSS and writes:
+This runs formal tests, five isolated fault mutations, three rotated trials of each comparison mode, validates the complete planned trials, body hashes, timing/RSS windows and single-run evidence IDs, and writes:
 
 - [`results/tests.json`](results/tests.json): test outcomes and source manifest.
 - [`results/mutations.json`](results/mutations.json): tests challenged by deliberately broken implementation copies.
@@ -69,15 +70,15 @@ This runs formal tests, five isolated fault mutations, three rotated trials of e
 - [`results/report.html`](results/report.html): readable comparison and explicit limitations.
 - [`results/validation.json`](results/validation.json): stage exit codes, timeouts and overall status.
 
-Nonzero exits, timeouts, skipped/empty test suites, mismatched sources or incomplete comparisons fail validation. Read `validation.json` alongside HTML; an old HTML file is not evidence that a later failed run passed. Recorded evidence describes its exact source manifest, not every later change.
+Nonzero exits, timeouts, skipped/empty test suites, mismatched sources or incomplete comparisons fail validation. A new run invalidates old success JSON/HTML immediately. Read `validation.json` alongside HTML; mixed run IDs, changed sources and a failed validation cannot be rendered as a new passing report. Recorded evidence describes its exact source manifest, not every later change.
 
-The benchmark uses a real HTTP demo worker with 256-byte POST bodies, 2 ms configured work delay, 300 scheduled arrivals at 200 requests/s, 20 warmups per mode and rotating mode order. All responses and errors are retained. Deployment trials must observe both versions. This is offered-load performance, **not maximum throughput**. End-to-end latency begins at the scheduled arrival, including sender lag. Requests are generated in the same host as the service.
+The benchmark uses a real HTTP demo worker with 256-byte POST bodies, 2 ms configured work delay, 300 scheduled arrivals at 200 requests/s, 20 warmups per mode and rotating mode order. All planned trials are retained, including fatal infrastructure failures (which may have incomplete request data). Completed trial responses include body SHA-256, request identity, release version and raw path/query checks. Gateway lifetime counters include warmups; scheduled trial counts do not. Deployment trials must observe both versions. This is offered-load performance, **not maximum throughput**. End-to-end latency begins at the scheduled arrival, including sender lag. Requests are generated in the same host as the service.
 
-RSS samples separate controller and workers. The summed RSS can double-count shared pages, excludes the load generator and is not exact peak physical memory. Direct mode keeps the controller resident but idle; its total is a controlled stack footprint, not standalone-worker deployment size. Set `SHIFTSTEAD_EXECUTION` to describe the actual execution context; omission is recorded as unspecified. No VM/container measurement is represented as native-host data.
+Schema 2 RSS headline peaks use the request observation window; full-lifecycle peaks are separate raw fields. RSS samples separate controller and workers. The summed RSS can double-count shared pages, excludes the load generator and is not exact peak physical memory. Direct mode keeps the controller resident but idle; its total is a controlled stack footprint, not standalone-worker deployment size. Set `SHIFTSTEAD_EXECUTION` to describe the actual execution context; omission is recorded as unspecified. The load-generator process runs RSS inspection in a sampler thread; instrumentation and OS scheduling can affect latency. The load client uses keep-alive; production gateway upstream connections close after each request. No VM/container measurement is represented as native-host data.
 
 ## Recorded MVP result
 
-Native macOS evidence: 34 formal tests, five detected fault mutations, nine real-process trials and 2,700/2,700 correct responses. At the tested 200 requests/s offered load, trial p95 scheduled end-to-end latency was 3.90–4.55 ms direct, 4.26–4.98 ms through the steady gateway, and 4.67–4.86 ms during rollout. Median trial sampled peak summed RSS was 80.0, 80.2 and 119.3 MiB respectively. See [measurement.md](docs/measurement.md) for methods and limits; no capacity, speedup or universal zero-downtime claim is made.
+Native macOS evidence: 68 formal tests, five detected fault mutations, nine real-process trials and 2,700/2,700 correct scheduled responses. At the tested 200 requests/s offered load, trial p95 scheduled end-to-end latency was 3.32–3.60 ms direct, 4.27–4.29 ms through the steady gateway, and 3.69–4.24 ms during rollout. Median trial sampled peak summed RSS in the request window was 80.1, 80.4 and 119.3 MiB respectively. See [measurement.md](docs/measurement.md) for methods and limits; no capacity, speedup or universal zero-downtime claim is made.
 
 ## Failure boundaries
 
@@ -92,7 +93,11 @@ Native macOS evidence: 34 formal tests, five detected fault mutations, nine real
 
 ## Platform evidence and remote CI
 
-Native macOS and Colima Linux each passed 34 formal tests with the same source manifest. Linux is a VM/container correctness result, with no Linux performance/RSS claim. GitHub-hosted Linux/macOS jobs were blocked before running tests by account billing/spending restrictions; they are not reported as passing. See [validation.md](docs/validation.md) and the separate Linux JSON records.
+Native macOS and Colima Linux each passed 68 formal tests with the same source manifest. Linux is a VM/container correctness result, with no Linux performance/RSS claim. GitHub-hosted Linux/macOS jobs were blocked before running tests by account billing/spending restrictions; they are not reported as passing. See [validation.md](docs/validation.md) and the separate Linux JSON records.
+
+## Review
+
+See [first-review.md](reviews/first-review.md) for reproduced issues, fixes, test boundaries and measurement-method changes. Schema 2 numbers are not presented as an optimization speedup over the original MVP.
 
 ## Project status and rights
 

@@ -6,15 +6,15 @@
 
 ## Linux in Colima
 
-A separately installed existing Colima/Lima runtime was used. The VM initially reported Stopped, was started for this check, and was confirmed Stopped after completion. No system DNS change, global Docker context activation or host workspace mount was requested. The container copied a source snapshot, had no external network, ran as UID 10001, and had limits of 2 CPUs, 1 GiB memory and 128 PIDs.
+A separately installed existing Colima/Lima runtime was used. The VM initially reported Stopped, was started for this check, and was confirmed Stopped after completion. No system DNS change, global Docker context activation or host workspace mount was requested. The container copied a source snapshot, had no external network, ran as UID 10001 with an init/reaper, and had limits of 2 CPUs, 1 GiB memory and 128 PIDs.
 
-`results/linux-tests.json` records 34 formal tests, no skips/failures/errors, plus environment and the same source manifest as the native tests. `results/linux-validation.json` records the fixed base-image digest, built image identity, exit code and cleanup outcome. The container was removed. Linux performance/RSS was **not measured**; test duration is not a cross-platform performance comparison.
+`results/linux-tests.json` records 68 formal tests, no skips/failures/errors, plus environment and the same source manifest as the native tests. `results/linux-validation.json` records the fixed base-image digest, built image identity, exit code and cleanup outcome. The container was removed. Linux performance/RSS was **not measured**; test duration is not a cross-platform performance comparison.
 
 The retained recipe is `containers/validation.Dockerfile`. Against an explicitly selected local Linux Docker daemon, the equivalent container commands are:
 
 ```sh
 docker build -f containers/validation.Dockerfile -t shiftstead-check .
-docker run --name shiftstead-check --network none --cpus 2 --memory 1g --pids-limit 128 shiftstead-check
+docker run --init --name shiftstead-check --network none --cpus 2 --memory 1g --pids-limit 128 shiftstead-check
 docker cp shiftstead-check:/workspace/results/tests.json results/linux-tests.json
 docker rm shiftstead-check
 ```
@@ -30,3 +30,5 @@ The initial push's Linux and macOS jobs did not execute any test steps. GitHub r
 Recorded run: https://github.com/andrew29mo/shiftstead/actions/runs/39010122224
 
 This is a remote-CI limitation, not a passing CI result. Account billing/spending settings were not changed. The retained native and container evidence does not change the GitHub run's failure status. The workflow remains available for rerun after the account issue is resolved; this project remains Private.
+
+The first review adds before/after source checks and a shared native validation run ID. Interrupted validation also cleans its stage process tree and registered test workers. Linux evidence has its own invocation context; its source/configuration manifest matches native, but it is not part of the native performance trial.

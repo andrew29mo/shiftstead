@@ -22,7 +22,7 @@ class Integration(unittest.IsolatedAsyncioTestCase):
         code,headers,body = await self.h.get('/?id=42','POST',b'abc')
         self.assertEqual(code,200)
         self.assertEqual(headers['X-Rollout-Version'],'v1')
-        self.assertEqual(json.loads(body),{'version':'v1','id':'42','bytes':3})
+        self.assertEqual(json.loads(body),{'version':'v1','id':'42','bytes':3,'sha256':__import__('hashlib').sha256(b'abc').hexdigest(),'raw_path':'/?id=42'})
     async def test_start_failure_never_routes(self):
         await self.first()
         await self.h.deploy('bad',['--exit'],startup_timeout=.2)
@@ -104,6 +104,7 @@ class Integration(unittest.IsolatedAsyncioTestCase):
         await self.h.crash();await self.h.start()
         self.assertEqual((await self.h.get())[1]['X-Rollout-Version'],'v1')
         self.assertTrue((await self.h.status())['operation']['recovered'])
+        self.assertEqual((await self.h.status())['operation']['state'],'failed')
     async def test_restart_during_drain(self):
         old = (await self.first())['route']
         pending = asyncio.create_task(self.h.get('/?delay=2'))
@@ -129,6 +130,7 @@ class Integration(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(r.status,200)
             value=await r.json()
             self.assertEqual(value['bytes'],len(payload))
+            self.assertEqual(value['sha256'],__import__('hashlib').sha256(payload).hexdigest())
             self.assertEqual(value['id'],'gzip')
     async def test_stream_complete(self):
         await self.first()

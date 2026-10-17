@@ -23,3 +23,11 @@ Launch intent precedes process creation. The launcher's durable identity precede
 ## Deliberate bounds
 
 Single service, local POSIX filesystem, cooperative foreground worker, at most two application revisions in ordinary rollout, HTTP/1.1, no persistent application state migration. State directory owner-only; loopback administration with a bearer token. Deploy commands inherit the controller environment; never accept manifests from untrusted callers. New host ports are selected from ephemeral loopback ports; a bind race causes readiness failure, not permission to adopt another service without the instance token.
+
+## Review clarifications
+
+Health probes have their own bounded connection pool, reject redirects, and consume the entire JSON response within a 4 KiB/timeout bound. A prefix is not sufficient readiness evidence. The startup loop does not accept a health response that completes after its deadline.
+
+Stop is itself a durable lifecycle operation. It clears admission, fences pending launches and drains/stops tracked workers independently of the HTTP caller. New deployment is rejected while stopping. Restart completes a persisted stop intent. Corrupt identity records block signaling/cleanup rather than authorizing a kill; an OS init/reaper is needed when running the controller/test runner as part of a container.
+
+Recovery distinguishes a healthy committed requested revision from an old revision kept available. Pre-switch interruption is failed, committed deployment recovery is done, and restoration of a previous healthy route is rolled_back. Healthy service availability alone never proves that the requested deployment or rollback completed.

@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 
 import psutil
+from yarl import URL
 from aiohttp import ClientSession, ClientTimeout, TCPConnector, web
 
 HOP = {'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
@@ -40,10 +41,27 @@ class Store:
         self.state = json.loads(row[0]) if row else {'generation': 0, 'route': None, 'previous': None, 'workers': {}, 'operation': None, 'requests': {}, 'degraded': None}
         token = self.root / 'admin.token'
         if not token.exists():
-            fd = os.open(token, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-            with os.fdopen(fd, 'w') as f:
-                f.write(secrets.token_urlsafe(32))
+            temporary = self.root / ('.token-' + secrets.token_hex(8))
+            try:
+                fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                with os.fdopen(fd, 'w') as f:
+                    f.write(secrets.token_urlsafe(32))
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(temporary, token)
+                directory = os.open(self.root, os.O_RDONLY)
+                try:
+                    os.fsync(directory)
+                finally:
+                    os.close(directory)
+            finally:
+                temporary.unlink(missing_ok=True)
         self.token = token.read_text().strip()
+        if not re.fullmatch(r'[A-Za-z0-9_-]{32,128}', self.token):
+            self.db.close()
+            self.lock.close()
+            raise RuntimeError('admin token invalid; inspect state directory')
+        os.chmod(token, 0o600)
 
     def save(self, kind, detail=None):
         try:
@@ -73,6 +91,7 @@ class Controller:
         self.request_timeout = request_timeout
         self.metrics = {'accepted': 0, 'completed': 0, 'failed': 0, 'rejected': 0, 'forced': 0}
         self.session = None
+        self.health_session = None
         self.task = None
         self.children = {}
         self.closing = False
@@ -82,34 +101,58 @@ class Controller:
         # Pinned aiohttp retries some idempotent requests after disconnect by default.
         # Disable it: the gateway must never silently replay an upstream operation.
         self.session._retry_connection = False
+        self.health_session = ClientSession(timeout=ClientTimeout(total=.25), connector=TCPConnector(limit=2, force_close=True), auto_decompress=False, trust_env=False)
+        self.health_session._retry_connection = False
         await self.recover()
 
     def identity(self, worker):
         record = self.store.root / (worker['id'] + '.identity')
         try:
             r = json.loads(record.read_text())
-            if r['token'] != worker['token']:
+            if not isinstance(r, dict) or r.get('token') != worker['token']:
+                return None
+            if (type(r.get('pid')) is not int or r['pid'] <= 0 or
+                    type(r.get('created')) not in (int, float) or
+                    not math.isfinite(r['created']) or r['created'] <= 0):
                 return None
             p = psutil.Process(r['pid'])
             if abs(p.create_time() - r['created']) > .001 or p.status() == psutil.STATUS_ZOMBIE:
                 return None
             return p
-        except (OSError, ValueError, KeyError, psutil.Error):
+        except (OSError, ValueError, KeyError, TypeError, AttributeError, psutil.Error):
             return None
 
-    async def health(self, worker):
+    def unknown_identity(self, worker):
+        path = self.store.root / (worker['id'] + '.identity')
+        if not path.exists():
+            return not worker.get('stopping')
+        try:
+            record = json.loads(path.read_text())
+            return (record.get('token') != worker['token'] or
+                    type(record.get('pid')) is not int or record['pid'] <= 0 or
+                    type(record.get('created')) not in (int, float) or
+                    not math.isfinite(record['created']) or record['created'] <= 0)
+        except (OSError, ValueError, AttributeError, TypeError):
+            return True
+
+    async def health(self, worker, timeout=.25):
         if worker.get('stopping') or self.identity(worker) is None:
             return False
         try:
-            async with self.session.get(f"http://127.0.0.1:{worker['port']}/readyz", timeout=ClientTimeout(total=.25)) as r:
-                if r.content_length and r.content_length > 4096:
+            async with self.health_session.get(f"http://127.0.0.1:{worker['port']}/readyz", timeout=ClientTimeout(total=timeout), allow_redirects=False) as r:
+                if r.status != 200 or (r.content_length and r.content_length > 4096):
                     return False
-                raw = await r.content.read(4097)
-                if len(raw) > 4096:
-                    return False
+                raw = bytearray()
+                while True:
+                    chunk = await r.content.read(4097 - len(raw))
+                    if not chunk:
+                        break
+                    raw.extend(chunk)
+                    if len(raw) > 4096:
+                        return False
                 value = json.loads(raw)
                 return r.status == 200 and value.get('instance') == worker['token'] and value.get('ready') is True
-        except (Exception,):
+        except Exception:
             return False
 
     def fence(self, generation):
@@ -126,6 +169,10 @@ class Controller:
             w = self.s['workers'].get(worker_id)
             if not w:
                 return True
+            if self.unknown_identity(w) and (self.store.root / (worker_id + '.identity')).exists():
+                self.s['degraded'] = 'worker identity corrupt; inspect before stopping'
+                self.store.save('stop_blocked', {'worker': worker_id})
+                return False
             w['stopping'] = True
             self.store.save('stopping', {'worker': worker_id})
             process = self.identity(w)
@@ -147,6 +194,17 @@ class Controller:
                     process.kill()
                 except psutil.NoSuchProcess:
                     pass
+        for _ in range(20):
+            if self.identity(w) is None:
+                break
+            await asyncio.sleep(.025)
+        async with self.mu:
+            if not self.fence(generation):
+                return False
+            if self.identity(w) is not None:
+                self.s['degraded'] = 'worker exit not confirmed'
+                self.store.save('stop_unconfirmed', {'worker': worker_id})
+                return False
             self.store.save('stopped', {'worker': worker_id})
         child = self.children.pop(worker_id, None)
         if child:
@@ -204,6 +262,42 @@ class Controller:
             self.task.add_done_callback(lambda task: self.task_done(task, gen))
             return gen
 
+    async def stop_all(self):
+        async with self.mu:
+            if self.closing or self.store.failed:
+                raise web.HTTPServiceUnavailable(text='controller unavailable')
+            op = self.s['operation']
+            if op and op.get('kind') == 'stop' and op['state'] == 'stopping' and self.task and not self.task.done():
+                task = self.task
+            else:
+                if self.task:
+                    self.task.cancel()
+                self.s['generation'] += 1
+                gen = self.s['generation']
+                self.s['route'] = self.s['previous'] = None
+                self.s['operation'] = {'generation': gen, 'id': 'stop-' + secrets.token_hex(8), 'kind': 'stop', 'state': 'stopping'}
+                # Fence launchers whose exec has not happened yet.
+                for worker in self.s['workers'].values():
+                    worker['stopping'] = True
+                self.store.save('stop_requested')
+                self.task = asyncio.create_task(self.finish_stop(gen))
+                self.task.add_done_callback(lambda task: self.task_done(task, gen))
+                task = self.task
+        return await asyncio.shield(task)
+
+    async def finish_stop(self, gen):
+        stopped = True
+        for wid in list(self.s['workers']):
+            await self.drain(gen, wid, 1)
+            stopped = await self.stop_worker(wid, gen) and stopped
+        async with self.mu:
+            if not self.fence(gen):
+                return False
+            if stopped:
+                self.s['degraded'] = None
+            self.phase('done' if stopped else 'failed', stopped=stopped)
+            return stopped
+
     def task_done(self, task, generation):
         if not task.cancelled() and task.exception() and task is self.task and self.fence(self.s['generation']):
             self.s['degraded'] = 'operation error; inspect events and restart'
@@ -221,7 +315,11 @@ class Controller:
     async def deploy(self, gen, spec):
         old = self.s['route']
         if self.s['previous'] and self.s['previous'] != old:
-            await self.stop_worker(self.s['previous'], gen)
+            if not await self.stop_worker(self.s['previous'], gen):
+                async with self.mu:
+                    if self.fence(gen):
+                        self.phase('failed', reason='previous worker cleanup failed')
+                return
         with socket.socket() as sock:
             sock.bind(('127.0.0.1', 0))
             port = sock.getsockname()[1]
@@ -245,7 +343,10 @@ class Controller:
         deadline = time.monotonic() + spec['startup_timeout']
         successes = 0
         while time.monotonic() < deadline and self.fence(gen):
-            successes = successes + 1 if await self.health(w) else 0
+            successes = successes + 1 if await self.health(w, timeout=min(.25, deadline - time.monotonic())) else 0
+            if time.monotonic() >= deadline:
+                successes = 0
+                break
             if successes >= 2:
                 break
             await asyncio.sleep(.05)
@@ -302,7 +403,11 @@ class Controller:
             self.phase('retaining')
         await asyncio.sleep(spec['retain'] if old else 0)
         if old:
-            await self.stop_worker(old, gen)
+            if not await self.stop_worker(old, gen):
+                async with self.mu:
+                    if self.fence(gen):
+                        self.phase('failed', reason='previous worker cleanup failed')
+                return
         async with self.mu:
             if self.fence(gen):
                 self.s['previous'] = None
@@ -325,27 +430,26 @@ class Controller:
         spec = {'drain_timeout': 2}
         await self.drain(gen, old, spec['drain_timeout'])
         # Superseded launches may exist even if they never became active.
+        stopped = True
         for wid in list(self.s['workers']):
             if wid != target:
-                await self.stop_worker(wid, gen)
+                stopped = await self.stop_worker(wid, gen) and stopped
         async with self.mu:
             if self.fence(gen):
-                self.phase('rolled_back', reason=reason)
+                self.phase('rolled_back' if stopped else 'failed', reason=reason if stopped else 'rollback route restored but worker cleanup failed')
 
     async def recover(self):
-        # Gateway is not listening until reconciliation completes; old client sockets were lost.
-        route = self.s['route']
+        # Reconcile the committed route even when a different launch is uncertain.
         op = self.s['operation']
-        unresolved = []
-        for wid, w in self.s['workers'].items():
-            path = self.store.root / (wid + '.identity')
-            if not path.exists() and not w.get('stopping'):
-                # Never blindly repeat a launch with uncertain outcome.
-                unresolved.append(wid)
-        if unresolved:
-            self.s['degraded'] = 'launch outcome unknown; inspect identity records before retry'
-            self.store.save('recovery_blocked', {'workers': unresolved})
+        if op and op.get('kind') == 'stop' and op['state'] == 'stopping':
+            self.s['generation'] += 1
+            gen = self.s['generation']
+            self.s['operation']['generation'] = gen
+            self.s['route'] = self.s['previous'] = None
+            self.store.save('recovering_stop')
+            await self.finish_stop(gen)
             return
+        route = self.s['route']
         if route and not await self.health(self.s['workers'][route]):
             previous = self.s['previous']
             if previous and await self.health(self.s['workers'][previous]):
@@ -356,15 +460,32 @@ class Controller:
                 self.s['route'] = None
                 self.s['degraded'] = 'no healthy route on recovery'
                 self.store.save('recovery_degraded')
+        unresolved = [wid for wid, w in self.s['workers'].items() if self.unknown_identity(w)]
+        if unresolved:
+            self.s['degraded'] = 'launch outcome unknown or identity corrupt; inspect before retry'
+            self.store.save('recovery_blocked', {'workers': unresolved})
+            return
         if op and op['state'] not in {'done', 'failed', 'rolled_back'}:
-            # Conservative recovery: retain committed healthy route, retire all other known workers.
+            prior_phase = op['state']
             self.s['generation'] += 1
             gen = self.s['generation']
+            self.s['operation']['generation'] = gen
+            stopped = True
             for wid in list(self.s['workers']):
                 if wid != self.s['route']:
-                    await self.stop_worker(wid, gen)
+                    stopped = await self.stop_worker(wid, gen) and stopped
             self.s['previous'] = None
-            self.phase('done' if self.s['route'] else 'failed', recovered=True)
+            outcome = 'failed'
+            reason = 'interrupted before requested route commit'
+            if self.s['route'] and stopped:
+                target = op.get('target') if op.get('kind') == 'rollback' else op.get('candidate')
+                if target and self.s['route'] == target:
+                    outcome = 'rolled_back' if op.get('kind') == 'rollback' else 'done'
+                    reason = 'committed requested route preserved'
+                elif op.get('kind') == 'deploy' and prior_phase in {'observing', 'draining', 'retaining'}:
+                    outcome = 'rolled_back'
+                    reason = 'recovery restored previous healthy route'
+            self.phase(outcome, recovered=True, reason=reason)
         self.store.save('reconciled')
 
     async def proxy(self, request):
@@ -389,7 +510,7 @@ class Controller:
             excluded = HOP | {x.strip().lower() for x in request.headers.get('Connection', '').split(',')}
             headers = [(k, v) for k, v in request.headers.items() if k.lower() not in excluded]
             url = f"http://127.0.0.1:{worker['port']}" + request.raw_path
-            async with self.session.request(request.method, url, headers=headers, data=body, allow_redirects=False) as upstream:
+            async with self.session.request(request.method, URL(url, encoded=True), headers=headers, data=body, allow_redirects=False) as upstream:
                 excluded = HOP | {x.strip().lower() for x in upstream.headers.get('Connection', '').split(',')}
                 response = web.StreamResponse(status=upstream.status, headers=[(k, v) for k, v in upstream.headers.items() if k.lower() not in excluded])
                 response.headers['X-Rollout-Version'] = worker['version']
@@ -429,4 +550,5 @@ class Controller:
             await asyncio.gather(self.task, return_exceptions=True)
         # A normal controller shutdown retains workers for restart recovery.
         await self.session.close()
+        await self.health_session.close()
         self.store.close()

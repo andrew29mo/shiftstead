@@ -1,0 +1,37 @@
+{
+  "baseline_commit": "d247c026e31a08eedc0de775381b43c8647b9542",
+  "kind": "adversarial regression reproduction before fixes",
+  "tests": 7,
+  "failures": 6,
+  "cases": [
+    {
+      "test": "tests.test_review_regressions.HealthReview.test_fragmented_valid_health_body",
+      "outcome": "FAIL"
+    },
+    {
+      "test": "tests.test_review_regressions.HealthReview.test_redirect_is_not_readiness",
+      "outcome": "FAIL"
+    },
+    {
+      "test": "tests.test_review_regressions.HealthReview.test_valid_prefix_plus_invalid_tail_is_not_healthy",
+      "outcome": "FAIL"
+    },
+    {
+      "test": "tests.test_review_regressions.LifecycleReview.test_health_not_starved_by_gateway_connector",
+      "outcome": "FAIL"
+    },
+    {
+      "test": "tests.test_review_regressions.LifecycleReview.test_rollback_during_drain_preserves_old_request",
+      "outcome": "ok"
+    },
+    {
+      "test": "tests.test_review_regressions.LifecycleReview.test_stop_serializes_new_deployment",
+      "outcome": "FAIL"
+    },
+    {
+      "test": "tests.test_review_regressions.LifecycleReview.test_unknown_launch_still_checks_committed_route",
+      "outcome": "FAIL"
+    }
+  ],
+  "notes": "Real controller/worker processes and real HTTP endpoints; local absolute paths and full tracebacks intentionally excluded."
+}

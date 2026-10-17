@@ -2,11 +2,11 @@
   "schema": 1,
   "kind": "formal-implementation-tests",
   "passed": true,
-  "tests": 34,
+  "tests": 68,
   "skipped": 0,
   "failures": 0,
   "errors": 0,
-  "seconds": 25.982268953,
+  "seconds": 40.207205723,
   "environment": {
     "os": "Linux",
     "release": "6.8.0-117-generic",
@@ -14,202 +14,379 @@
     "python": "3.12.14",
     "execution": "Colima Linux VM container; correctness only, not native performance"
   },
+  "run_id": null,
   "source": {
-    "sha256": "222b8061e3e1f06938c930686af8f8042910339baaa40fa0b7242c31c3d10634",
+    "sha256": "605f83e5bb8e40c48311b7d6ba876ebb68cf97e6174cf735c2dca2a5e7e437d0",
     "files": {
-      "pyproject.toml": "8f5b19371e04af56c62b77b34c21489c66945189ccb58f837943b2151a659e68",
+      ".dockerignore": "748c02186dabee7d13bc8ff534d43a2b445b524f334ebe39e7ccae4fa99ea016",
+      ".github/workflows/ci.yml": "f0827cb35cdc1af8bcc837e315acba9d3aae19f00795c5c1ed2a75ea66081d58",
+      "containers/validation.Dockerfile": "1a17796ac37e1c116b8d9d1520fd00cafba646f2b8b49f89aaeafbd24c3b7560",
+      "pyproject.toml": "9197d38f1ec73f59060be2e06989eb5b3c7b51004209ddee61f168930fbdc04b",
       "requirements.lock": "80bc8a6c6314f0d7a18b7f200b3ebdd56b2ee1d6145862af45739bd8de220b29",
-      "requirements.txt": "0abd6e7ebd7568fcee441b1eb4f3b8d5833b3af8bbbfe8fbabf25b649f8facdd",
+      "requirements.txt": "571e56c025180be682808e7e45b1440fb1c51215965f3ebef990536b7bb6b9d8",
       "rollout/__init__.py": "c6269a13e04dbd271217171096d6a51e2cb0974b6030d84294e87cecc042bf6d",
-      "rollout/__main__.py": "ee76582754c6204d4089efc009da0c65d5bbfc5c29c12b346a11ac9b9d74d6a8",
-      "rollout/core.py": "7a0e5dfd86e5610e1a8088d9cfccdb76d608a914249d1996e793e85520339bef",
-      "rollout/demo.py": "e2862a57321053b1cfbd7ea5ce93b0ea5dc9c22d8f45775b6e07ca2726515cf6",
+      "rollout/__main__.py": "d298789f6bc8c91c89fba4f0469b283463d3611f3a7a2f810a04b5541733f05d",
+      "rollout/core.py": "ba5a963a7782f2c541be17237ede9f9a105cdd6093509fbdfdcfe47875430115",
+      "rollout/demo.py": "59944bde65b5221cf5e440a436847cd1bc631ccfceb00b9450fbc3ce82251b68",
       "rollout/launch.py": "fef8e75ab61e6c043dc689190f2eb944a4044e87b999696d9508fbf68e190021",
       "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "tests/harness.py": "31ade5c62aed87f50cdc8de1e17b4b5741b893ae9ee03f49ad7faf40c1737deb",
-      "tests/test_integration.py": "adbd38cceb2d18b3f92145402c1435674e2d814d5adfd8d8f48b3b86e16b4413",
+      "tests/test_integration.py": "1e1670133aa0fdc7b72f54ad9a6d328dd89085c906a214da8da3e774d4c6d483",
+      "tests/test_report_review.py": "0a94748ea077e5d98bc66cbd4ad1b00ddb23248be7034f8967a89260a786896a",
       "tests/test_reporting.py": "52dab059f3ae9cf6d658b2edbc8038c059bd03ea22ef6cf903446a92b0bca0ac",
+      "tests/test_review_regressions.py": "c228ea05d5585a7bd0890aead62c6895cfb7450e2b67039fb0de83e76cb8acc5",
       "tests/test_safety.py": "76603a1943f95bbfcd1898b292bcb154ee5ff0730910c0f2ead77c3881a30cfe",
       "tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "tools/benchmark.py": "ac4a5f230c0bedd0a63066231f4ea0e0806f37a3f1d9ec6a17d0e1cb70e6d5fa",
-      "tools/evidence.py": "d833e2009c5b81cb08bd98726532daade1e57fe119c3d286581bffaf9d1e08cb",
-      "tools/mutation_check.py": "619e4aada8e7c3f99a716c396160c5f818134069f2d0938b0c219202cc364366",
-      "tools/process.py": "8054655e97a252fb92bbc5b54c53cefa828d2bf2dbe55ea78a38c239373953fc",
-      "tools/report.py": "9572b8241705c5c6f4bc97623a029db51a189ec1ae587fec194d9bfefe9d4cca",
-      "tools/test_suite.py": "b3e471839cc4c69e4e96e03893f0a33f0ec4cadbcad20b4b306f2890d30dac47",
-      "tools/validate.py": "cb92bdcd7d0b9fe2a03de5758377b290f0a4336ef9e1c4c2e83c7ee973df1215"
+      "tools/benchmark.py": "ca50d44598d0c86a0030fce4520b86abb5ae23cacb38fb628d07e8a620c26d70",
+      "tools/evidence.py": "099e997d770e458ad60249a1e23482b25deae0736300fd15417f0653cca45bb5",
+      "tools/mutation_check.py": "462cafb182dee6dd913c8d2f1d9a7c3d55da3a5d46dbcb55f186fdbe9b52fc69",
+      "tools/process.py": "63b285090403ac4d7f0c4f1b52b92dc658b1f9f45d409087ebf11b30e9887109",
+      "tools/report.py": "ed0672e13ada6fd707b2580ef651adbedc7f4d50a9da502e46c430754d452592",
+      "tools/test_suite.py": "20d4c58526d1d1de5e00d0560858e1c11a7848edc6308454cb17756992e9245d",
+      "tools/validate.py": "d954e6b0d0e7320e41b1d4479ebb47a3a109e6607ed9dfcb93276c0ff2f29bd7"
     }
   },
+  "source_changed": false,
   "cases": [
     {
       "test": "test_integration.Integration.test_auto_rollback",
       "outcome": "passed",
-      "seconds": 1.1668265039999994
+      "seconds": 1.1697864449999997
     },
     {
       "test": "test_integration.Integration.test_body_and_upgrade_limits",
       "outcome": "passed",
-      "seconds": 0.5601117179999999
+      "seconds": 0.58501285
     },
     {
       "test": "test_integration.Integration.test_compressed_body_preserved",
       "outcome": "passed",
-      "seconds": 0.5555796280000003
+      "seconds": 0.5769236109999998
     },
     {
       "test": "test_integration.Integration.test_drain_expiry_counts_aborted",
       "outcome": "passed",
-      "seconds": 1.7557588319999997
+      "seconds": 1.7459280499999998
     },
     {
       "test": "test_integration.Integration.test_graceful_drain",
       "outcome": "passed",
-      "seconds": 1.583413746999998
+      "seconds": 1.593563992
     },
     {
       "test": "test_integration.Integration.test_idempotency_and_conflict",
       "outcome": "passed",
-      "seconds": 0.15998341299999908
+      "seconds": 0.1676041380000015
     },
     {
       "test": "test_integration.Integration.test_manual_rollback_fences_cleanup",
       "outcome": "passed",
-      "seconds": 2.0872483770000017
+      "seconds": 2.088850935
     },
     {
       "test": "test_integration.Integration.test_no_route_and_admin_auth",
       "outcome": "passed",
-      "seconds": 0.14205893500000144
+      "seconds": 0.14548920900000084
     },
     {
       "test": "test_integration.Integration.test_readiness_blocks_early_route",
       "outcome": "passed",
-      "seconds": 1.5751740589999983
+      "seconds": 1.5705012630000006
     },
     {
       "test": "test_integration.Integration.test_real_worker_and_post",
       "outcome": "passed",
-      "seconds": 0.560113960999999
+      "seconds": 0.6093870449999983
     },
     {
       "test": "test_integration.Integration.test_restart_bad_committed_route",
       "outcome": "passed",
-      "seconds": 1.7374347770000007
+      "seconds": 1.7540514569999992
     },
     {
       "test": "test_integration.Integration.test_restart_before_switch",
       "outcome": "passed",
-      "seconds": 0.8106509790000018
+      "seconds": 0.8181179589999985
     },
     {
       "test": "test_integration.Integration.test_restart_during_drain",
       "outcome": "passed",
-      "seconds": 1.6696965780000035
+      "seconds": 1.700431806000001
     },
     {
       "test": "test_integration.Integration.test_restart_route_and_idempotency",
       "outcome": "passed",
-      "seconds": 0.6968811029999991
+      "seconds": 0.6980760100000012
     },
     {
       "test": "test_integration.Integration.test_second_owner_rejected",
       "outcome": "passed",
-      "seconds": 0.26289967099999956
+      "seconds": 0.27117901599999783
     },
     {
       "test": "test_integration.Integration.test_start_failure_never_routes",
       "outcome": "passed",
-      "seconds": 0.7687192820000028
+      "seconds": 0.7690983500000002
     },
     {
       "test": "test_integration.Integration.test_stop_cleans_owned_processes",
       "outcome": "passed",
-      "seconds": 0.5508187019999973
+      "seconds": 0.5959930050000004
     },
     {
       "test": "test_integration.Integration.test_stream_complete",
       "outcome": "passed",
-      "seconds": 1.128222547
+      "seconds": 1.0869994210000016
     },
     {
       "test": "test_integration.Integration.test_unhealthy_rollback_target",
       "outcome": "passed",
-      "seconds": 1.556087987999998
+      "seconds": 1.5056294870000002
     },
     {
       "test": "test_integration.Integration.test_unready_timeout",
       "outcome": "passed",
-      "seconds": 2.1632688109999947
+      "seconds": 2.1777183370000017
     },
     {
       "test": "test_integration.Integration.test_validation_and_missing_rollback",
       "outcome": "passed",
-      "seconds": 0.14070938799999766
+      "seconds": 0.1477721579999951
     },
     {
       "test": "test_integration.Limits.test_overload",
       "outcome": "passed",
-      "seconds": 1.0012062150000034
+      "seconds": 0.9642552179999981
+    },
+    {
+      "test": "test_report_review.ReportReview.test_changed_payload_with_same_length_rejected",
+      "outcome": "passed",
+      "seconds": 0.00011016799999907789
+    },
+    {
+      "test": "test_report_review.ReportReview.test_fatal_trial_prevents_success",
+      "outcome": "passed",
+      "seconds": 0.0001515840000010371
+    },
+    {
+      "test": "test_report_review.ReportReview.test_missing_whole_trial_group_rejected",
+      "outcome": "passed",
+      "seconds": 3.662499999990132e-05
+    },
+    {
+      "test": "test_report_review.ReportReview.test_nonfinite_raw_latency_rejected",
+      "outcome": "passed",
+      "seconds": 3.758400000464235e-05
+    },
+    {
+      "test": "test_report_review.ReportReview.test_rss_pre_window_peak_cannot_be_headline",
+      "outcome": "passed",
+      "seconds": 3.96259999959625e-05
+    },
+    {
+      "test": "test_report_review.ReportReview.test_sender_lag_headline_recomputed",
+      "outcome": "passed",
+      "seconds": 3.791700000022047e-05
+    },
+    {
+      "test": "test_report_review.ReportReview.test_valid_raw_fixture",
+      "outcome": "passed",
+      "seconds": 9.295899999983703e-05
+    },
+    {
+      "test": "test_report_review.ReportReview.test_wrong_baseline_version_rejected",
+      "outcome": "passed",
+      "seconds": 3.90010000046459e-05
+    },
+    {
+      "test": "test_report_review.ReportReview.test_wrong_rate_metadata_rejected",
+      "outcome": "passed",
+      "seconds": 3.325000000131695e-05
+    },
+    {
+      "test": "test_report_review.ReportRunIdentity.test_old_same_source_benchmark_cannot_join_new_run",
+      "outcome": "passed",
+      "seconds": 0.0014282180000009248
+    },
+    {
+      "test": "test_report_review.ReportRunIdentity.test_renderer_cannot_turn_failed_validation_green",
+      "outcome": "passed",
+      "seconds": 0.0013557600000027037
+    },
+    {
+      "test": "test_report_review.ValidationReview.test_infrastructure_failure_keeps_all_planned_trials",
+      "outcome": "passed",
+      "seconds": 0.0028530209999999556
+    },
+    {
+      "test": "test_report_review.ValidationReview.test_old_success_is_invalidated_before_any_stage",
+      "outcome": "passed",
+      "seconds": 0.004347863999996093
+    },
+    {
+      "test": "test_report_review.ValidationReview.test_source_change_during_passing_test_suite_is_rejected",
+      "outcome": "passed",
+      "seconds": 0.0016529700000020853
+    },
+    {
+      "test": "test_report_review.ValidationReview.test_source_change_during_stage_prevents_success",
+      "outcome": "passed",
+      "seconds": 0.00212755599999781
     },
     {
       "test": "test_reporting.EvidenceSafety.test_empty_report_rejected",
       "outcome": "passed",
-      "seconds": 2.820899999989024e-05
+      "seconds": 2.112500000350792e-05
     },
     {
       "test": "test_reporting.EvidenceSafety.test_nan_and_infinity_rejected",
       "outcome": "passed",
-      "seconds": 0.00017779299999887144
+      "seconds": 0.00010554200000001401
     },
     {
       "test": "test_reporting.EvidenceSafety.test_unknown_manifest_fields_rejected",
       "outcome": "passed",
-      "seconds": 1.4249999999549345e-05
+      "seconds": 8.62499999954025e-06
     },
     {
       "test": "test_reporting.ValidationTimeout.test_nonzero_and_timeout_are_not_success",
       "outcome": "passed",
-      "seconds": 0.06188450399999823
+      "seconds": 0.05919266899999798
+    },
+    {
+      "test": "test_review_regressions.CleanupReview.test_deploy_cleanup_failure_is_not_done",
+      "outcome": "passed",
+      "seconds": 1.4241771889999981
+    },
+    {
+      "test": "test_review_regressions.CleanupReview.test_rollback_cleanup_failure_is_not_complete",
+      "outcome": "passed",
+      "seconds": 0.9847892109999989
+    },
+    {
+      "test": "test_review_regressions.HealthReview.test_false_readiness_in_200",
+      "outcome": "passed",
+      "seconds": 0.009361138000002711
+    },
+    {
+      "test": "test_review_regressions.HealthReview.test_fragmented_valid_health_body",
+      "outcome": "passed",
+      "seconds": 0.04303591800000106
+    },
+    {
+      "test": "test_review_regressions.HealthReview.test_health_timeout_is_bounded",
+      "outcome": "passed",
+      "seconds": 0.2207239130000005
+    },
+    {
+      "test": "test_review_regressions.HealthReview.test_oversized_health_body_rejected",
+      "outcome": "passed",
+      "seconds": 0.01591621800000098
+    },
+    {
+      "test": "test_review_regressions.HealthReview.test_redirect_is_not_readiness",
+      "outcome": "passed",
+      "seconds": 0.011079232000000161
+    },
+    {
+      "test": "test_review_regressions.HealthReview.test_valid_prefix_plus_invalid_tail_is_not_healthy",
+      "outcome": "passed",
+      "seconds": 0.043608129999995526
+    },
+    {
+      "test": "test_review_regressions.IdentityReview.test_nonfinite_identity_cannot_authorize_a_signal",
+      "outcome": "passed",
+      "seconds": 0.006565287999997338
+    },
+    {
+      "test": "test_review_regressions.LifecycleReview.test_health_not_starved_by_gateway_connector",
+      "outcome": "passed",
+      "seconds": 2.1739528850000056
+    },
+    {
+      "test": "test_review_regressions.LifecycleReview.test_rollback_during_drain_preserves_old_request",
+      "outcome": "passed",
+      "seconds": 1.745873392
+    },
+    {
+      "test": "test_review_regressions.LifecycleReview.test_stop_serializes_new_deployment",
+      "outcome": "passed",
+      "seconds": 1.2731289509999968
+    },
+    {
+      "test": "test_review_regressions.LifecycleReview.test_unknown_launch_still_checks_committed_route",
+      "outcome": "passed",
+      "seconds": 0.7304398440000028
+    },
+    {
+      "test": "test_review_regressions.StopReview.test_disconnect_does_not_cancel_stop",
+      "outcome": "passed",
+      "seconds": 1.2222375130000032
+    },
+    {
+      "test": "test_review_regressions.StopReview.test_encoded_path_and_query_preserved",
+      "outcome": "passed",
+      "seconds": 0.9268831420000012
+    },
+    {
+      "test": "test_review_regressions.StopReview.test_restart_finishes_persisted_stop",
+      "outcome": "passed",
+      "seconds": 1.806997177999996
+    },
+    {
+      "test": "test_review_regressions.StopReview.test_uncommitted_rollback_not_reported_as_success",
+      "outcome": "passed",
+      "seconds": 1.0950133510000057
+    },
+    {
+      "test": "test_review_regressions.TokenReview.test_empty_existing_token_does_not_disable_auth",
+      "outcome": "passed",
+      "seconds": 0.0053124740000001225
+    },
+    {
+      "test": "test_review_regressions.ValidationInterruptReview.test_interrupt_reaps_stage_and_its_child",
+      "outcome": "passed",
+      "seconds": 0.3018252410000031
     },
     {
       "test": "test_safety.Fences.test_identity_mismatch_never_signals_process",
       "outcome": "passed",
-      "seconds": 0.014165015999999753
+      "seconds": 0.01636038000000184
     },
     {
       "test": "test_safety.Fences.test_retry_disabled_in_formal_client",
       "outcome": "passed",
-      "seconds": 0.005325693000003184
+      "seconds": 0.007447980000002019
     },
     {
       "test": "test_safety.Fences.test_stale_route_and_stop_cannot_mutate",
       "outcome": "passed",
-      "seconds": 0.00461514200000579
+      "seconds": 0.006579351999995708
     },
     {
       "test": "test_safety.Fences.test_storage_failure_fails_closed",
       "outcome": "passed",
-      "seconds": 0.005232401000000664
+      "seconds": 0.006376351999996643
     },
     {
       "test": "test_safety.FirstFailure.test_first_release_unhealthy_has_no_route",
       "outcome": "passed",
-      "seconds": 1.2065114500000007
+      "seconds": 1.1354703650000033
     },
     {
       "test": "test_safety.RecoverySafety.test_client_disconnect_releases_capacity",
       "outcome": "passed",
-      "seconds": 1.1289703160000002
+      "seconds": 1.2073708249999981
     },
     {
       "test": "test_safety.RecoverySafety.test_no_healthy_route_after_restart_is_degraded",
       "outcome": "passed",
-      "seconds": 0.782151074000005
+      "seconds": 0.7944456500000001
     },
     {
       "test": "test_safety.RecoverySafety.test_unknown_launch_outcome_is_not_relaunched",
       "outcome": "passed",
-      "seconds": 0.00811533599999592
+      "seconds": 0.007577349999998262
     }
   ]
 }
