@@ -121,6 +121,15 @@ class Integration(unittest.IsolatedAsyncioTestCase):
         await self.h.wait(lambda s:s['operation']['state']=='observing')
         await self.h.crash();await asyncio.sleep(.8);await self.h.start()
         self.assertEqual((await self.h.get())[1]['X-Rollout-Version'],'v1')
+    async def test_compressed_body_preserved(self):
+        import gzip
+        await self.first()
+        payload=b'compressed payload' * 20
+        async with self.h.session.post(f'http://127.0.0.1:{self.h.port}/?id=gzip',data=gzip.compress(payload),headers={'Content-Encoding':'gzip'}) as r:
+            self.assertEqual(r.status,200)
+            value=await r.json()
+            self.assertEqual(value['bytes'],len(payload))
+            self.assertEqual(value['id'],'gzip')
     async def test_stream_complete(self):
         await self.first()
         code,_,body = await self.h.get('/stream')

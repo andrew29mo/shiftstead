@@ -8,7 +8,7 @@
 
 A separately installed existing Colima/Lima runtime was used. The VM initially reported Stopped, was started for this check, and was confirmed Stopped after completion. No system DNS change, global Docker context activation or host workspace mount was requested. The container copied a source snapshot, had no external network, ran as UID 10001, and had limits of 2 CPUs, 1 GiB memory and 128 PIDs.
 
-`results/linux-tests.json` records 33 formal tests, no skips/failures/errors, plus environment and the same source manifest as the native tests. `results/linux-validation.json` records the fixed base-image digest, built image identity, exit code and cleanup outcome. The container was removed. Linux performance/RSS was **not measured**; test duration is not a cross-platform performance comparison.
+`results/linux-tests.json` records 34 formal tests, no skips/failures/errors, plus environment and the same source manifest as the native tests. `results/linux-validation.json` records the fixed base-image digest, built image identity, exit code and cleanup outcome. The container was removed. Linux performance/RSS was **not measured**; test duration is not a cross-platform performance comparison.
 
 The retained recipe is `containers/validation.Dockerfile`. Against an explicitly selected local Linux Docker daemon, the equivalent container commands are:
 

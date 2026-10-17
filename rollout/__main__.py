@@ -69,7 +69,7 @@ async def serve(a):
         asyncio.get_running_loop().add_signal_handler(sig, done.set)
     try:
         for app, port in [(admin,a.admin_port),(gateway,a.port)]:
-            runner = web.AppRunner(app, access_log=None, handler_cancellation=True, shutdown_timeout=1)
+            runner = web.AppRunner(app, access_log=None, handler_cancellation=True, shutdown_timeout=1, auto_decompress=False)
             runners.append(runner)
             await runner.setup()
             await web.TCPSite(runner,'127.0.0.1',port).start()

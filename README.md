@@ -77,7 +77,7 @@ RSS samples separate controller and workers. The summed RSS can double-count sha
 
 ## Recorded MVP result
 
-Native macOS evidence: 33 formal tests, five detected fault mutations, nine real-process trials and 2,700/2,700 correct responses. At the tested 200 requests/s offered load, trial p95 scheduled end-to-end latency was 3.73–4.16 ms direct, 4.98–5.62 ms through the steady gateway, and 4.73–4.97 ms during rollout. Median trial sampled peak summed RSS was 80.0, 80.3 and 119.2 MiB respectively. See [measurement.md](docs/measurement.md) for methods and limits; no capacity, speedup or universal zero-downtime claim is made.
+Native macOS evidence: 34 formal tests, five detected fault mutations, nine real-process trials and 2,700/2,700 correct responses. At the tested 200 requests/s offered load, trial p95 scheduled end-to-end latency was 3.90–4.55 ms direct, 4.26–4.98 ms through the steady gateway, and 4.67–4.86 ms during rollout. Median trial sampled peak summed RSS was 80.0, 80.2 and 119.3 MiB respectively. See [measurement.md](docs/measurement.md) for methods and limits; no capacity, speedup or universal zero-downtime claim is made.
 
 ## Failure boundaries
 
@@ -86,13 +86,13 @@ Native macOS evidence: 33 formal tests, five detected fault mutations, nine real
 - Startup failures leave the previous route intact. Rollback requires a healthy, non-stopping retained worker. If none exists, status is explicitly degraded; recovery with no healthy route serves 503.
 - Health monitoring is limited to startup and the post-switch observation interval. This is not an always-on auto-healing supervisor.
 - Database/schema changes, external side effects and application-level compatibility are not reverted.
-- Request bodies are bounded at 1 MiB; upstream response streaming is bounded by flow control and total request deadlines. No WebSocket, CONNECT, HTTP/2, TLS termination or automatic application retries.
+- Request bodies are bounded at 1 MiB of received body bytes; compressed bytes are preserved for the application, which remains responsible for its own decompression/resource limits; upstream response streaming is bounded by flow control and total request deadlines. No WebSocket, CONNECT, HTTP/2, TLS termination or automatic application retries.
 - At most two application workers are intended during ordinary rollout. Superseded workers are fenced and retired. The operation-ID history is capped at 1,000; this MVP has no history compaction command or general disk quota.
 - State storage must be local and reliable. SQLite durability is subject to filesystem/hardware guarantees. Storage errors fail closed; corrupt or missing identity records can require operator intervention. After inspecting the cause, explicit `stop` retires tracked workers and resets degradation so a fresh deployment can be submitted.
 
 ## Platform evidence and remote CI
 
-Native macOS and Colima Linux each passed 33 formal tests with the same source manifest. Linux is a VM/container correctness result, with no Linux performance/RSS claim. GitHub-hosted Linux/macOS jobs were blocked before running tests by account billing/spending restrictions; they are not reported as passing. See [validation.md](docs/validation.md) and the separate Linux JSON records.
+Native macOS and Colima Linux each passed 34 formal tests with the same source manifest. Linux is a VM/container correctness result, with no Linux performance/RSS claim. GitHub-hosted Linux/macOS jobs were blocked before running tests by account billing/spending restrictions; they are not reported as passing. See [validation.md](docs/validation.md) and the separate Linux JSON records.
 
 ## Project status and rights
 

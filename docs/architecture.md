@@ -4,7 +4,7 @@
 
 A single asyncio daemon contains administration, the rollout state machine, and the HTTP gateway. SQLite stores a snapshot and append-only transition events in one transaction. A POSIX owner lock prevents two controllers from operating one state directory. Each worker is a separate process. The launcher writes PID, process creation time and a per-instance token before exec; health must echo that token.
 
-The gateway registers its selected worker and client transport under the same lock used for route commits. Selection remains pinned until response completion/cancellation. Request body reading happens after registration, so slow uploads are included in drain accounting. Response writes observe downstream flow control. New keep-alive requests select the current route, not the connection's original revision. The Python gateway is deliberately limited; a future Caddy adapter would need equivalent evidence for its own draining semantics.
+The gateway registers its selected worker and client transport under the same lock used for route commits. Selection remains pinned until response completion/cancellation. Request body reading happens after registration, so slow uploads are included in drain accounting. Response writes observe downstream flow control. Gateway-side automatic request decompression is disabled: compressed request bytes must agree with forwarded Content-Encoding and Content-Length. A real gzip POST regression test exercises this through the formal gateway and worker. New keep-alive requests select the current route, not the connection's original revision. The Python gateway is deliberately limited; a future Caddy adapter would need equivalent evidence for its own draining semantics.
 
 ## Durable transitions
 
