@@ -6,7 +6,7 @@
   "skipped": 0,
   "failures": 0,
   "errors": 0,
-  "seconds": 39.97572824999952,
+  "seconds": 40.807123750000756,
   "environment": {
     "os": "Darwin",
     "release": "27.0.0",
@@ -14,14 +14,14 @@
     "python": "3.12.14",
     "execution": "native-host"
   },
-  "run_id": "e2b00626e3f4f58a715e14f91ad3b98a",
+  "run_id": "b8346c3ecefe8332b81f852f6f4a403c",
   "source": {
-    "sha256": "605f83e5bb8e40c48311b7d6ba876ebb68cf97e6174cf735c2dca2a5e7e437d0",
+    "sha256": "dbf0c8a4c38f99b1ba07d34cc054dae2de89f322b71ce346ecb1b7dadf80ecda",
     "files": {
       ".dockerignore": "748c02186dabee7d13bc8ff534d43a2b445b524f334ebe39e7ccae4fa99ea016",
       ".github/workflows/ci.yml": "f0827cb35cdc1af8bcc837e315acba9d3aae19f00795c5c1ed2a75ea66081d58",
       "containers/validation.Dockerfile": "1a17796ac37e1c116b8d9d1520fd00cafba646f2b8b49f89aaeafbd24c3b7560",
-      "pyproject.toml": "9197d38f1ec73f59060be2e06989eb5b3c7b51004209ddee61f168930fbdc04b",
+      "pyproject.toml": "e610fda616d160d48e8a7788f4a07be618e82201260525c8b05427ba31240a25",
       "requirements.lock": "80bc8a6c6314f0d7a18b7f200b3ebdd56b2ee1d6145862af45739bd8de220b29",
       "requirements.txt": "571e56c025180be682808e7e45b1440fb1c51215965f3ebef990536b7bb6b9d8",
       "rollout/__init__.py": "c6269a13e04dbd271217171096d6a51e2cb0974b6030d84294e87cecc042bf6d",
@@ -51,342 +51,342 @@
     {
       "test": "test_integration.Integration.test_auto_rollback",
       "outcome": "passed",
-      "seconds": 1.2292170830005489
+      "seconds": 1.2109227079999982
     },
     {
       "test": "test_integration.Integration.test_body_and_upgrade_limits",
       "outcome": "passed",
-      "seconds": 0.5631808749967604
+      "seconds": 0.5606648749999295
     },
     {
       "test": "test_integration.Integration.test_compressed_body_preserved",
       "outcome": "passed",
-      "seconds": 0.5640141250005399
+      "seconds": 0.5649077499983832
     },
     {
       "test": "test_integration.Integration.test_drain_expiry_counts_aborted",
       "outcome": "passed",
-      "seconds": 1.7763715410001168
+      "seconds": 1.8159315419979976
     },
     {
       "test": "test_integration.Integration.test_graceful_drain",
       "outcome": "passed",
-      "seconds": 1.5473458749984275
+      "seconds": 1.5626439160005248
     },
     {
       "test": "test_integration.Integration.test_idempotency_and_conflict",
       "outcome": "passed",
-      "seconds": 0.18429383399779908
+      "seconds": 0.19081250000090222
     },
     {
       "test": "test_integration.Integration.test_manual_rollback_fences_cleanup",
       "outcome": "passed",
-      "seconds": 2.1326912910008105
+      "seconds": 2.1498014999997395
     },
     {
       "test": "test_integration.Integration.test_no_route_and_admin_auth",
       "outcome": "passed",
-      "seconds": 0.16015766700002132
+      "seconds": 0.16238970900303684
     },
     {
       "test": "test_integration.Integration.test_readiness_blocks_early_route",
       "outcome": "passed",
-      "seconds": 1.5418430419995275
+      "seconds": 1.5579792079988692
     },
     {
       "test": "test_integration.Integration.test_real_worker_and_post",
       "outcome": "passed",
-      "seconds": 0.5604822499990405
+      "seconds": 0.5713994580000872
     },
     {
       "test": "test_integration.Integration.test_restart_bad_committed_route",
       "outcome": "passed",
-      "seconds": 1.730896125001891
+      "seconds": 1.880956334000075
     },
     {
       "test": "test_integration.Integration.test_restart_before_switch",
       "outcome": "passed",
-      "seconds": 0.8368186249972496
+      "seconds": 0.8299086670012912
     },
     {
       "test": "test_integration.Integration.test_restart_during_drain",
       "outcome": "passed",
-      "seconds": 1.7248478750007052
+      "seconds": 1.7447579999970912
     },
     {
       "test": "test_integration.Integration.test_restart_route_and_idempotency",
       "outcome": "passed",
-      "seconds": 0.6892953750029847
+      "seconds": 0.8233232499987935
     },
     {
       "test": "test_integration.Integration.test_second_owner_rejected",
       "outcome": "passed",
-      "seconds": 0.2694586249999702
+      "seconds": 0.28087212500031455
     },
     {
       "test": "test_integration.Integration.test_start_failure_never_routes",
       "outcome": "passed",
-      "seconds": 0.7682777910013101
+      "seconds": 0.7813458749988058
     },
     {
       "test": "test_integration.Integration.test_stop_cleans_owned_processes",
       "outcome": "passed",
-      "seconds": 0.5649049999992712
+      "seconds": 0.5680347079978674
     },
     {
       "test": "test_integration.Integration.test_stream_complete",
       "outcome": "passed",
-      "seconds": 1.0814207080002234
+      "seconds": 1.0915032919983787
     },
     {
       "test": "test_integration.Integration.test_unhealthy_rollback_target",
       "outcome": "passed",
-      "seconds": 1.5496449579986802
+      "seconds": 1.582342083002004
     },
     {
       "test": "test_integration.Integration.test_unready_timeout",
       "outcome": "passed",
-      "seconds": 2.110454541998479
+      "seconds": 2.188177125000948
     },
     {
       "test": "test_integration.Integration.test_validation_and_missing_rollback",
       "outcome": "passed",
-      "seconds": 0.14598083300006692
+      "seconds": 0.1506017920000886
     },
     {
       "test": "test_integration.Limits.test_overload",
       "outcome": "passed",
-      "seconds": 0.965636375000031
+      "seconds": 0.9979619170007936
     },
     {
       "test": "test_report_review.ReportReview.test_changed_payload_with_same_length_rejected",
       "outcome": "passed",
-      "seconds": 0.00012541599789983593
+      "seconds": 0.00013700000272365287
     },
     {
       "test": "test_report_review.ReportReview.test_fatal_trial_prevents_success",
       "outcome": "passed",
-      "seconds": 0.00018325000201002695
+      "seconds": 0.00018650000129127875
     },
     {
       "test": "test_report_review.ReportReview.test_missing_whole_trial_group_rejected",
       "outcome": "passed",
-      "seconds": 4.0208000427810475e-05
+      "seconds": 4.1125000279862434e-05
     },
     {
       "test": "test_report_review.ReportReview.test_nonfinite_raw_latency_rejected",
       "outcome": "passed",
-      "seconds": 4.199999966658652e-05
+      "seconds": 4.420799814397469e-05
     },
     {
       "test": "test_report_review.ReportReview.test_rss_pre_window_peak_cannot_be_headline",
       "outcome": "passed",
-      "seconds": 4.720799915958196e-05
+      "seconds": 4.729200009023771e-05
     },
     {
       "test": "test_report_review.ReportReview.test_sender_lag_headline_recomputed",
       "outcome": "passed",
-      "seconds": 5.004099875804968e-05
+      "seconds": 4.579199958243407e-05
     },
     {
       "test": "test_report_review.ReportReview.test_valid_raw_fixture",
       "outcome": "passed",
-      "seconds": 8.629199874121696e-05
+      "seconds": 9.387500176671892e-05
     },
     {
       "test": "test_report_review.ReportReview.test_wrong_baseline_version_rejected",
       "outcome": "passed",
-      "seconds": 3.720899985637516e-05
+      "seconds": 3.787500099861063e-05
     },
     {
       "test": "test_report_review.ReportReview.test_wrong_rate_metadata_rejected",
       "outcome": "passed",
-      "seconds": 3.6124998587183654e-05
+      "seconds": 3.4167002013418823e-05
     },
     {
       "test": "test_report_review.ReportRunIdentity.test_old_same_source_benchmark_cannot_join_new_run",
       "outcome": "passed",
-      "seconds": 0.014148582999041537
+      "seconds": 0.011470416000520345
     },
     {
       "test": "test_report_review.ReportRunIdentity.test_renderer_cannot_turn_failed_validation_green",
       "outcome": "passed",
-      "seconds": 0.010355582999181934
+      "seconds": 0.010530249997827923
     },
     {
       "test": "test_report_review.ValidationReview.test_infrastructure_failure_keeps_all_planned_trials",
       "outcome": "passed",
-      "seconds": 0.014816959002928343
+      "seconds": 0.014315749998786487
     },
     {
       "test": "test_report_review.ValidationReview.test_old_success_is_invalidated_before_any_stage",
       "outcome": "passed",
-      "seconds": 0.013637291998747969
+      "seconds": 0.011145374999614432
     },
     {
       "test": "test_report_review.ValidationReview.test_source_change_during_passing_test_suite_is_rejected",
       "outcome": "passed",
-      "seconds": 0.003409416996873915
+      "seconds": 0.003398749999178108
     },
     {
       "test": "test_report_review.ValidationReview.test_source_change_during_stage_prevents_success",
       "outcome": "passed",
-      "seconds": 0.0038053329990361817
+      "seconds": 0.0036851250006293412
     },
     {
       "test": "test_reporting.EvidenceSafety.test_empty_report_rejected",
       "outcome": "passed",
-      "seconds": 1.7082998965634033e-05
+      "seconds": 1.704199894447811e-05
     },
     {
       "test": "test_reporting.EvidenceSafety.test_nan_and_infinity_rejected",
       "outcome": "passed",
-      "seconds": 0.00010916699829977006
+      "seconds": 0.00010958299753838219
     },
     {
       "test": "test_reporting.EvidenceSafety.test_unknown_manifest_fields_rejected",
       "outcome": "passed",
-      "seconds": 9.999999747378752e-06
+      "seconds": 1.049999991664663e-05
     },
     {
       "test": "test_reporting.ValidationTimeout.test_nonzero_and_timeout_are_not_success",
       "outcome": "passed",
-      "seconds": 0.0812915000024077
+      "seconds": 0.07945383300102549
     },
     {
       "test": "test_review_regressions.CleanupReview.test_deploy_cleanup_failure_is_not_done",
       "outcome": "passed",
-      "seconds": 1.443473167000775
+      "seconds": 1.459012208000786
     },
     {
       "test": "test_review_regressions.CleanupReview.test_rollback_cleanup_failure_is_not_complete",
       "outcome": "passed",
-      "seconds": 1.0389736670003913
+      "seconds": 1.0818359589975444
     },
     {
       "test": "test_review_regressions.HealthReview.test_false_readiness_in_200",
       "outcome": "passed",
-      "seconds": 0.00975641599870869
+      "seconds": 0.012720041002467042
     },
     {
       "test": "test_review_regressions.HealthReview.test_fragmented_valid_health_body",
       "outcome": "passed",
-      "seconds": 0.03968950000125915
+      "seconds": 0.04124370800127508
     },
     {
       "test": "test_review_regressions.HealthReview.test_health_timeout_is_bounded",
       "outcome": "passed",
-      "seconds": 0.21219529199879616
+      "seconds": 0.2131023340007232
     },
     {
       "test": "test_review_regressions.HealthReview.test_oversized_health_body_rejected",
       "outcome": "passed",
-      "seconds": 0.01546408300055191
+      "seconds": 0.014564042001438793
     },
     {
       "test": "test_review_regressions.HealthReview.test_redirect_is_not_readiness",
       "outcome": "passed",
-      "seconds": 0.012514458001533058
+      "seconds": 0.013121250001859153
     },
     {
       "test": "test_review_regressions.HealthReview.test_valid_prefix_plus_invalid_tail_is_not_healthy",
       "outcome": "passed",
-      "seconds": 0.04378141699999105
+      "seconds": 0.04316595799900824
     },
     {
       "test": "test_review_regressions.IdentityReview.test_nonfinite_identity_cannot_authorize_a_signal",
       "outcome": "passed",
-      "seconds": 0.01166295899747638
+      "seconds": 0.011017042001185473
     },
     {
       "test": "test_review_regressions.LifecycleReview.test_health_not_starved_by_gateway_connector",
       "outcome": "passed",
-      "seconds": 2.171811500000331
+      "seconds": 2.231334041000082
     },
     {
       "test": "test_review_regressions.LifecycleReview.test_rollback_during_drain_preserves_old_request",
       "outcome": "passed",
-      "seconds": 1.6741865830008464
+      "seconds": 1.70873308299997
     },
     {
       "test": "test_review_regressions.LifecycleReview.test_stop_serializes_new_deployment",
       "outcome": "passed",
-      "seconds": 1.2762874580002972
+      "seconds": 1.3153646659993683
     },
     {
       "test": "test_review_regressions.LifecycleReview.test_unknown_launch_still_checks_committed_route",
       "outcome": "passed",
-      "seconds": 0.7360342499996477
+      "seconds": 0.7463019999995595
     },
     {
       "test": "test_review_regressions.StopReview.test_disconnect_does_not_cancel_stop",
       "outcome": "passed",
-      "seconds": 1.169740332999936
+      "seconds": 1.180419415999495
     },
     {
       "test": "test_review_regressions.StopReview.test_encoded_path_and_query_preserved",
       "outcome": "passed",
-      "seconds": 0.5653189590011607
+      "seconds": 0.584882707997167
     },
     {
       "test": "test_review_regressions.StopReview.test_restart_finishes_persisted_stop",
       "outcome": "passed",
-      "seconds": 1.7303068750006787
+      "seconds": 1.7693605839995143
     },
     {
       "test": "test_review_regressions.StopReview.test_uncommitted_rollback_not_reported_as_success",
       "outcome": "passed",
-      "seconds": 1.2633077079990471
+      "seconds": 1.2422184170027322
     },
     {
       "test": "test_review_regressions.TokenReview.test_empty_existing_token_does_not_disable_auth",
       "outcome": "passed",
-      "seconds": 0.00664179099840112
+      "seconds": 0.0076002919995517
     },
     {
       "test": "test_review_regressions.ValidationInterruptReview.test_interrupt_reaps_stage_and_its_child",
       "outcome": "passed",
-      "seconds": 0.3454339579984662
+      "seconds": 0.3515279579987691
     },
     {
       "test": "test_safety.Fences.test_identity_mismatch_never_signals_process",
       "outcome": "passed",
-      "seconds": 0.01392150000174297
+      "seconds": 0.017382333000568906
     },
     {
       "test": "test_safety.Fences.test_retry_disabled_in_formal_client",
       "outcome": "passed",
-      "seconds": 0.006094250002206536
+      "seconds": 0.006010166001942707
     },
     {
       "test": "test_safety.Fences.test_stale_route_and_stop_cannot_mutate",
       "outcome": "passed",
-      "seconds": 0.005713292001018999
+      "seconds": 0.005699708002794068
     },
     {
       "test": "test_safety.Fences.test_storage_failure_fails_closed",
       "outcome": "passed",
-      "seconds": 0.006038167000951944
+      "seconds": 0.005797207999421516
     },
     {
       "test": "test_safety.FirstFailure.test_first_release_unhealthy_has_no_route",
       "outcome": "passed",
-      "seconds": 1.247734708002099
+      "seconds": 1.1972183329999098
     },
     {
       "test": "test_safety.RecoverySafety.test_client_disconnect_releases_capacity",
       "outcome": "passed",
-      "seconds": 1.1147430419987359
+      "seconds": 1.1343992500005697
     },
     {
       "test": "test_safety.RecoverySafety.test_no_healthy_route_after_restart_is_degraded",
       "outcome": "passed",
-      "seconds": 0.8214437499991618
+      "seconds": 0.857441291998839
     },
     {
       "test": "test_safety.RecoverySafety.test_unknown_launch_outcome_is_not_relaunched",
       "outcome": "passed",
-      "seconds": 0.007087833000696264
+      "seconds": 0.008905459002562566
     }
   ]
 }

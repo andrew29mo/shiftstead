@@ -1,5 +1,7 @@
 # Pre-publication audit — 2026-10-17
 
+Historical snapshot before MIT adoption and the subsequent source-bound validation refresh. See [licensing.md](../docs/licensing.md) for current license status.
+
 Reviewed implementation commit: `4646c630e9b452494237f6caa1c0f6de79204c85`.
 Source/configuration SHA-256: `605f83e5bb8e40c48311b7d6ba876ebb68cf97e6174cf735c2dca2a5e7e437d0`.
 
@@ -35,6 +37,6 @@ These are synthetic localhost results at 200 scheduled requests/s, not saturatio
 
 GitHub remains **Private**, owned by `andrew29mo`, with only the owner in the collaborator list. Actions default permissions are read-only and workflows cannot approve pull requests.
 
-There is still **no project LICENSE** and no license declared in project metadata; README, notices and GitHub's empty license field agree. Public visibility would not itself grant an open-source license. Choosing a license remains a separate owner decision.
+At the audited commit, there was **no project LICENSE** and no license declared in project metadata; README, notices and GitHub's empty license field agreed. This historical status is superseded by the owner-authorized MIT adoption recorded in [licensing.md](../docs/licensing.md).
 
 GitHub-hosted CI remains blocked before testing by billing/spending restrictions; local evidence does not change that status. See [validation.md](../docs/validation.md). No account billing setting, access grant or publication setting was changed.

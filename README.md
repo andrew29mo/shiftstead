@@ -82,7 +82,7 @@ Schema 2 RSS headline peaks use the request observation window; full-lifecycle p
 
 ## Recorded MVP result
 
-Native macOS evidence: 68 formal tests, five detected fault mutations, nine real-process trials and 2,700/2,700 correct scheduled responses. At the tested 200 requests/s offered load, trial p95 scheduled end-to-end latency was 3.32–3.60 ms direct, 4.27–4.29 ms through the steady gateway, and 3.69–4.24 ms during rollout. Median trial sampled peak summed RSS in the request window was 80.1, 80.4 and 119.3 MiB respectively. See [measurement.md](docs/measurement.md) for methods and limits; no capacity, speedup or universal zero-downtime claim is made.
+Native macOS evidence: 68 formal tests, five detected fault mutations, nine real-process trials and 2,700/2,700 correct scheduled responses. At the tested 200 requests/s offered load, trial p95 scheduled end-to-end latency was 3.30–3.79 ms direct, 4.22–4.62 ms through the steady gateway, and 4.15–4.44 ms during rollout. Median trial sampled peak summed RSS in the request window was 80.4, 80.4 and 119.3 MiB respectively. See [measurement.md](docs/measurement.md) for methods and limits; no capacity, speedup or universal zero-downtime claim is made.
 
 ## Failure boundaries
 
@@ -105,6 +105,6 @@ See [pre-publication.md](reviews/pre-publication.md) for the final source/eviden
 
 ## Project status and rights
 
-Private MVP preparation. No license has been selected for the original project yet; no open-source license grant is implied. Third-party dependencies retain their respective licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Private MVP preparation. Original project code, documentation and synthetic examples are licensed under [MIT](LICENSE), copyright (c) 2026 Andrew Yuan. Third-party dependencies retain their respective licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The license choice and scope are recorded in [licensing.md](docs/licensing.md).
 
 The Shiftstead name passed an initial public-name screen; this is not formal trademark clearance. See [name-screen.md](docs/name-screen.md).

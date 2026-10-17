@@ -1,6 +1,6 @@
 # Third-party components and project license status
 
-No license has been selected for the original Shiftstead code, documentation and synthetic examples. This repository does not grant an open-source license for that original material. No external model, real-user dataset or copied third-party implementation is included.
+Original Shiftstead code, documentation and synthetic examples are licensed under MIT; see LICENSE. Copyright (c) 2026 Andrew Yuan. The project license does not replace third-party terms. No external model, real-user dataset or copied third-party implementation is included.
 
 The following packages are installed separately, pinned in requirements.lock and retain their own terms. License labels below were checked against the installed distribution metadata/license files for these versions. They do not relicense this project or constitute approval of every possible future binary/container redistribution.
 
@@ -20,7 +20,7 @@ The following packages are installed separately, pinned in requirements.lock and
 
 Python and its standard library retain the Python distribution's license/notices. SQLite is dedicated to the public domain by its authors; filesystem/platform and Python distribution components may carry additional terms. No Python/SQLite binaries or environments are uploaded.
 
-Build tooling uses setuptools (MIT and notices for vendored components). CI uses actions/checkout and actions/setup-python (MIT), pinned by commit in the workflow. No actions or build-tool source is vendored here. Preserve upstream license files/notices if distributing dependencies; a future project license alone will not cover them.
+Build tooling uses setuptools (MIT and notices for vendored components). CI uses actions/checkout and actions/setup-python (MIT), pinned by commit in the workflow. No actions or build-tool source is vendored here. Preserve upstream license files/notices if distributing dependencies; the project MIT license alone does not cover them.
 
 References: https://github.com/aio-libs/aiohttp ; https://github.com/giampaolo/psutil ; https://docs.python.org/3.12/license.html ; https://www.sqlite.org/copyright.html
 
