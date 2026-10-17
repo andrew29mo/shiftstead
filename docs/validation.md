@@ -23,11 +23,13 @@ Check the actual container exit code and JSON result; successful `docker cp`/cle
 
 ## GitHub-hosted CI
 
-The initial push's Linux and macOS jobs did not execute any test steps. GitHub rejected both at runner admission:
+The initial push and the reviewed implementation commit's Linux and macOS jobs did not execute any test steps. GitHub rejected both at runner admission:
 
 > The job was not started because recent account payments have failed or your spending limit needs to be increased.
 
-Recorded run: https://github.com/andrew29mo/shiftstead/actions/runs/39010122224
+Initial run: https://github.com/andrew29mo/shiftstead/actions/runs/39010122224
+
+Rechecked implementation commit `4646c630e9b452494237f6caa1c0f6de79204c85`: https://github.com/andrew29mo/shiftstead/actions/runs/39012449385 . Both job records have empty step lists; the runner-admission annotation still reports the billing/spending restriction. This does not identify a failing project test.
 
 This is a remote-CI limitation, not a passing CI result. Account billing/spending settings were not changed. The retained native and container evidence does not change the GitHub run's failure status. The workflow remains available for rerun after the account issue is resolved; this project remains Private.
 

@@ -33,10 +33,14 @@ In another terminal:
 
 ```sh
 .venv/bin/shiftstead deploy examples/v1.json --id release-v1
+# Repeat status until operation.state is done; do not submit v2 immediately.
 .venv/bin/shiftstead status
 .venv/bin/shiftstead deploy examples/v2.json --id release-v2
+# Repeat status until operation.state is retaining, then roll back within
+# the example's 30-second retention window (before operation.state is done).
+.venv/bin/shiftstead status
 .venv/bin/shiftstead history
-# During the retained-worker window:
+# While the previous worker is still retained:
 .venv/bin/shiftstead rollback --id restore-v1
 # Explicitly drain and stop managed workers:
 .venv/bin/shiftstead stop
@@ -97,7 +101,7 @@ Native macOS and Colima Linux each passed 68 formal tests with the same source m
 
 ## Review
 
-See [first-review.md](reviews/first-review.md) for reproduced issues, fixes, test boundaries and measurement-method changes. Schema 2 numbers are not presented as an optimization speedup over the original MVP.
+See [pre-publication.md](reviews/pre-publication.md) for the final source/evidence, packaging and privacy audit, and [first-review.md](reviews/first-review.md) for reproduced issues, fixes, test boundaries and measurement-method changes. Schema 2 numbers are not presented as an optimization speedup over the original MVP.
 
 ## Project status and rights
 
