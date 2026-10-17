@@ -58,7 +58,7 @@ The controller injects `PORT` and `ROLLOUT_INSTANCE`. Readiness is an applicatio
 ## Validate and measure
 
 ```sh
-.venv/bin/python -m tools.validate
+SHIFTSTEAD_EXECUTION=native-host .venv/bin/python -m tools.validate
 ```
 
 This runs formal tests, five isolated fault mutations, three rotated trials of each comparison mode, validates raw counts/timings/RSS and writes:
@@ -73,11 +73,11 @@ Nonzero exits, timeouts, skipped/empty test suites, mismatched sources or incomp
 
 The benchmark uses a real HTTP demo worker with 256-byte POST bodies, 2 ms configured work delay, 300 scheduled arrivals at 200 requests/s, 20 warmups per mode and rotating mode order. All responses and errors are retained. Deployment trials must observe both versions. This is offered-load performance, **not maximum throughput**. End-to-end latency begins at the scheduled arrival, including sender lag. Requests are generated in the same host as the service.
 
-RSS samples separate controller and workers. The summed RSS can double-count shared pages, excludes the load generator and is not exact peak physical memory. Direct mode keeps the controller resident but idle; its total is a controlled stack footprint, not standalone-worker deployment size. No VM/container measurement is represented as native-host data.
+RSS samples separate controller and workers. The summed RSS can double-count shared pages, excludes the load generator and is not exact peak physical memory. Direct mode keeps the controller resident but idle; its total is a controlled stack footprint, not standalone-worker deployment size. Set `SHIFTSTEAD_EXECUTION` to describe the actual execution context; omission is recorded as unspecified. No VM/container measurement is represented as native-host data.
 
 ## Recorded MVP result
 
-Native macOS evidence: 33 formal tests, five detected fault mutations, nine real-process trials and 2,700/2,700 correct responses. At the tested 200 requests/s offered load, trial p95 scheduled end-to-end latency was 4.22–4.41 ms direct, 4.35–5.07 ms through the steady gateway, and 4.35–5.12 ms during rollout. Median trial sampled peak summed RSS was 80.0, 80.3 and 119.2 MiB respectively. See [measurement.md](docs/measurement.md) for methods and limits; no capacity, speedup or universal zero-downtime claim is made.
+Native macOS evidence: 33 formal tests, five detected fault mutations, nine real-process trials and 2,700/2,700 correct responses. At the tested 200 requests/s offered load, trial p95 scheduled end-to-end latency was 3.73–4.16 ms direct, 4.98–5.62 ms through the steady gateway, and 4.73–4.97 ms during rollout. Median trial sampled peak summed RSS was 80.0, 80.3 and 119.2 MiB respectively. See [measurement.md](docs/measurement.md) for methods and limits; no capacity, speedup or universal zero-downtime claim is made.
 
 ## Failure boundaries
 
@@ -89,6 +89,10 @@ Native macOS evidence: 33 formal tests, five detected fault mutations, nine real
 - Request bodies are bounded at 1 MiB; upstream response streaming is bounded by flow control and total request deadlines. No WebSocket, CONNECT, HTTP/2, TLS termination or automatic application retries.
 - At most two application workers are intended during ordinary rollout. Superseded workers are fenced and retired. The operation-ID history is capped at 1,000; this MVP has no history compaction command or general disk quota.
 - State storage must be local and reliable. SQLite durability is subject to filesystem/hardware guarantees. Storage errors fail closed; corrupt or missing identity records can require operator intervention. After inspecting the cause, explicit `stop` retires tracked workers and resets degradation so a fresh deployment can be submitted.
+
+## Platform evidence and remote CI
+
+Native macOS and Colima Linux each passed 33 formal tests with the same source manifest. Linux is a VM/container correctness result, with no Linux performance/RSS claim. GitHub-hosted Linux/macOS jobs were blocked before running tests by account billing/spending restrictions; they are not reported as passing. See [validation.md](docs/validation.md) and the separate Linux JSON records.
 
 ## Project status and rights
 

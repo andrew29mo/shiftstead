@@ -9,3 +9,6 @@ dist/
 *.token
 .DS_Store
 AGENTS.md
+.env*
+*.identity
+*.log

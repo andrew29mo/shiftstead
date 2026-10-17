@@ -6,11 +6,11 @@ The complete validation passed 33 formal tests and detected all five targeted fa
 
 | Mode | Correct / scheduled | Trial p95 scheduled E2E range | Median of trial sampled peak summed RSS |
 |---|---:|---:|---:|
-| Direct worker access | 900 / 900 | 4.22–4.41 ms | 80.0 MiB |
-| Steady gateway | 900 / 900 | 4.35–5.07 ms | 80.3 MiB |
-| Gateway during rollout | 900 / 900 | 4.35–5.12 ms | 119.2 MiB |
+| Direct worker access | 900 / 900 | 3.73–4.16 ms | 80.0 MiB |
+| Steady gateway | 900 / 900 | 4.98–5.62 ms | 80.3 MiB |
+| Gateway during rollout | 900 / 900 | 4.73–4.97 ms | 119.2 MiB |
 
-The configured arrival rate was 200 requests/s. Achieved correct-response rates were near that offered rate; this does not establish maximum capacity. Rollout operation durations were 0.732, 0.693 and 0.725 seconds in these trials, including startup/readiness, observation and the configured retention window. They are not rollback/restart recovery times.
+The configured arrival rate was 200 requests/s. Achieved correct-response rates were near that offered rate; this does not establish maximum capacity. Rollout operation durations were 0.729, 0.733 and 0.710 seconds in these trials, including startup/readiness, observation and the configured retention window. They are not rollback/restart recovery times.
 
 RSS is sampled every 10 ms. Summed controller + worker RSS can double-count shared pages and excludes the load generator. The direct scenario deliberately leaves the controller resident but idle; this is not standalone-worker-only deployment memory. The extra worker during rollout explains the larger stack footprint. This is a trade-off for retaining a rollback target, not a memory-optimization claim.
 

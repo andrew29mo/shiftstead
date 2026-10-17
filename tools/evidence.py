@@ -1,6 +1,7 @@
 import hashlib
 import json
 import platform
+import os
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -12,4 +13,4 @@ def provenance():
     return {'sha256':digest,'files':files}
 
 def environment():
-    return {'os':platform.system(),'release':platform.release(),'architecture':platform.machine(),'python':platform.python_version(),'execution':'native host; not a VM/container'}
+    return {'os':platform.system(),'release':platform.release(),'architecture':platform.machine(),'python':platform.python_version(),'execution':os.environ.get('SHIFTSTEAD_EXECUTION','unspecified; inspect invocation context')}

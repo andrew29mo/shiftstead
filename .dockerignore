@@ -1,0 +1,15 @@
+.git
+.venv
+.state
+.env*
+**/__pycache__
+*.egg-info
+build
+dist
+results
+*.sqlite*
+*.token
+*.identity
+*.log
+AGENTS.md
+.DS_Store

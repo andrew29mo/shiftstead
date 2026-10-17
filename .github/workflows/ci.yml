@@ -17,6 +17,8 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 6
+    env:
+      SHIFTSTEAD_EXECUTION: github-hosted runner; virtualized, not native-host performance
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
         with:
