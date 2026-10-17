@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "source": {
+    "sha256": "d42f4c11f4333f1d9b0573cfe53ef9037dd1113a3bbc436c07d8f479ffb1a55e",
+    "files": {
+      "pyproject.toml": "8f5b19371e04af56c62b77b34c21489c66945189ccb58f837943b2151a659e68",
+      "requirements.lock": "80bc8a6c6314f0d7a18b7f200b3ebdd56b2ee1d6145862af45739bd8de220b29",
+      "requirements.txt": "0abd6e7ebd7568fcee441b1eb4f3b8d5833b3af8bbbfe8fbabf25b649f8facdd",
+      "rollout/__init__.py": "c6269a13e04dbd271217171096d6a51e2cb0974b6030d84294e87cecc042bf6d",
+      "rollout/__main__.py": "606e847e34855a3ac41ece5b8d45f3fa2ebbdce86ac2b30d6d8884ee12fb2a0e",
+      "rollout/core.py": "7a0e5dfd86e5610e1a8088d9cfccdb76d608a914249d1996e793e85520339bef",
+      "rollout/demo.py": "e2862a57321053b1cfbd7ea5ce93b0ea5dc9c22d8f45775b6e07ca2726515cf6",
+      "rollout/launch.py": "fef8e75ab61e6c043dc689190f2eb944a4044e87b999696d9508fbf68e190021",
+      "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/harness.py": "31ade5c62aed87f50cdc8de1e17b4b5741b893ae9ee03f49ad7faf40c1737deb",
+      "tests/test_integration.py": "f076b73d1f3e5e84bc30d7d15e6b2395c038055216cbf619ef542d96e01769dd",
+      "tests/test_reporting.py": "52dab059f3ae9cf6d658b2edbc8038c059bd03ea22ef6cf903446a92b0bca0ac",
+      "tests/test_safety.py": "76603a1943f95bbfcd1898b292bcb154ee5ff0730910c0f2ead77c3881a30cfe",
+      "tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tools/benchmark.py": "ac4a5f230c0bedd0a63066231f4ea0e0806f37a3f1d9ec6a17d0e1cb70e6d5fa",
+      "tools/evidence.py": "6c2989b20ae9d2845bf7b60c7a8eda0d4b8474a40e036600f04d5debe0007473",
+      "tools/mutation_check.py": "619e4aada8e7c3f99a716c396160c5f818134069f2d0938b0c219202cc364366",
+      "tools/process.py": "8054655e97a252fb92bbc5b54c53cefa828d2bf2dbe55ea78a38c239373953fc",
+      "tools/report.py": "9572b8241705c5c6f4bc97623a029db51a189ec1ae587fec194d9bfefe9d4cca",
+      "tools/test_suite.py": "b3e471839cc4c69e4e96e03893f0a33f0ec4cadbcad20b4b306f2890d30dac47",
+      "tools/validate.py": "cb92bdcd7d0b9fe2a03de5758377b290f0a4336ef9e1c4c2e83c7ee973df1215"
+    }
+  },
+  "cases": [
+    {
+      "mutation": "stale_route",
+      "test": "tests.test_safety.Fences.test_stale_route_and_stop_cannot_mutate",
+      "detected": true,
+      "exit_code": 1,
+      "timed_out": false,
+      "leaked_workers_cleaned": 0
+    },
+    {
+      "mutation": "readiness_ignored",
+      "test": "tests.test_integration.Integration.test_unready_timeout",
+      "detected": true,
+      "exit_code": 1,
+      "timed_out": false,
+      "leaked_workers_cleaned": 0
+    },
+    {
+      "mutation": "skip_drain",
+      "test": "tests.test_integration.Integration.test_graceful_drain",
+      "detected": true,
+      "exit_code": 1,
+      "timed_out": false,
+      "leaked_workers_cleaned": 0
+    },
+    {
+      "mutation": "pid_identity_ignored",
+      "test": "tests.test_safety.Fences.test_identity_mismatch_never_signals_process",
+      "detected": true,
+      "exit_code": 1,
+      "timed_out": false,
+      "leaked_workers_cleaned": 0
+    },
+    {
+      "mutation": "empty_report_accepted",
+      "test": "tests.test_reporting.EvidenceSafety.test_empty_report_rejected",
+      "detected": true,
+      "exit_code": 1,
+      "timed_out": false,
+      "leaked_workers_cleaned": 0
+    }
+  ]
+}

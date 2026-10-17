@@ -1,0 +1,8 @@
+{
+  "version": "v2",
+  "command": [".venv/bin/python", "-m", "rollout.demo", "--version", "v2"],
+  "startup_timeout": 5,
+  "observe": 1,
+  "drain_timeout": 5,
+  "retain": 30
+}
