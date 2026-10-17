@@ -6,4 +6,4 @@ Do not place credentials in manifest arguments: status/history may contain those
 
 The MVP does not sandbox workers or defend against another malicious process under the same user. PID plus creation-time checks reduce accidental PID-reuse hazards; they are not a kernel security boundary. Use an external service manager/OS controls for production isolation and resource caps.
 
-Report concerns privately through the repository owner's GitHub profile contact route; do not include secrets in issues. This MVP makes no availability, production-hardening or full HTTP-proxy compatibility guarantee.
+Report vulnerabilities privately through [GitHub private vulnerability reporting](https://github.com/andrew29mo/shiftstead/security/advisories/new); do not include secrets in public issues. This MVP makes no availability, production-hardening or full HTTP-proxy compatibility guarantee.

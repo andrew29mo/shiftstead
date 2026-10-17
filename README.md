@@ -97,7 +97,7 @@ Native macOS evidence: 68 formal tests, five detected fault mutations, nine real
 
 ## Platform evidence and remote CI
 
-Native macOS and Colima Linux each passed 68 formal tests with the same source manifest. Linux is a VM/container correctness result, with no Linux performance/RSS claim. GitHub-hosted Linux/macOS jobs were blocked before running tests by account billing/spending restrictions; they are not reported as passing. See [validation.md](docs/validation.md) and the separate Linux JSON records.
+Native macOS and Colima Linux each passed 68 formal tests with the same source manifest. Linux is a VM/container correctness result, with no Linux performance/RSS claim. After publication, GitHub-hosted Linux/macOS CI also passed 68 tests each. Earlier private-repository runs were blocked before tests by billing/spending restrictions; the public rerun does not establish that private-repository billing is resolved. See [validation.md](docs/validation.md) and the separate Linux JSON records.
 
 ## Review
 
@@ -105,6 +105,8 @@ See [pre-publication.md](reviews/pre-publication.md) for the final source/eviden
 
 ## Project status and rights
 
-Private MVP preparation. Original project code, documentation and synthetic examples are licensed under [MIT](LICENSE), copyright (c) 2026 Andrew Yuan. Third-party dependencies retain their respective licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The license choice and scope are recorded in [licensing.md](docs/licensing.md).
+Public early-stage MVP. Original project code, documentation and synthetic examples are licensed under [MIT](LICENSE), copyright (c) 2026 Andrew Yuan. Third-party dependencies retain their respective licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The license choice and scope are recorded in [licensing.md](docs/licensing.md).
+
+Publication and repository guardrails are recorded in [publication.md](docs/publication.md); see [SECURITY.md](SECURITY.md) for application scope and private vulnerability reporting.
 
 The Shiftstead name passed an initial public-name screen; this is not formal trademark clearance. See [name-screen.md](docs/name-screen.md).

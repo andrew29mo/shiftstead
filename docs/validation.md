@@ -31,6 +31,12 @@ Initial run: https://github.com/andrew29mo/shiftstead/actions/runs/39010122224
 
 Rechecked implementation commit `4646c630e9b452494237f6caa1c0f6de79204c85`: https://github.com/andrew29mo/shiftstead/actions/runs/39012449385 . Both job records have empty step lists; the runner-admission annotation still reports the billing/spending restriction. This does not identify a failing project test.
 
-This is a remote-CI limitation, not a passing CI result. Account billing/spending settings were not changed. The retained native and container evidence does not change the GitHub run's failure status. The workflow remains available for rerun after the account issue is resolved; this project remains Private.
+Those private-repository attempts were not passing CI results. Account billing/spending settings were not changed. Local evidence does not change the failed attempts' status. Public-repository rerun results are recorded below; they do not establish that private-repository billing or quota is resolved.
 
 The first review adds before/after source checks and a shared native validation run ID. Interrupted validation also cleans its stage process tree and registered test workers. Linux evidence has its own invocation context; its source/configuration manifest matches native, but it is not part of the native performance trial.
+
+## Public-repository rerun
+
+After the owner authorized publication, [run 39013250488, attempt 2](https://github.com/andrew29mo/shiftstead/actions/runs/39013250488/attempts/2) passed on implementation commit `7884a1fc6989777cf91d86b9bd4a33d62ec77108`. Both jobs actually executed the formal suite: macOS 68 tests (60.083 s) and Ubuntu 68 tests (43.939 s), plus the installed CLI help check. These job durations are correctness-run context, not native performance comparisons. The earlier failed admission attempt and this successful public attempt must not be conflated.
+
+Publication documentation and Dependabot scheduling leave the tested implementation/configuration manifest unchanged. Repository security settings are recorded in [publication.md](publication.md).

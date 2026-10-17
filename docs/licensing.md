@@ -1,6 +1,6 @@
 # License decision — 2026-10-17
 
-Shiftstead's original code, documentation and synthetic examples use the MIT license in [LICENSE](../LICENSE), copyright (c) 2026 Andrew Yuan. Package metadata declares SPDX expression `MIT` and includes LICENSE and THIRD_PARTY_NOTICES.md in built distributions. The GitHub repository remains Private; no package or container is published by this change.
+Shiftstead's original code, documentation and synthetic examples use the MIT license in [LICENSE](../LICENSE), copyright (c) 2026 Andrew Yuan. Package metadata declares SPDX expression `MIT` and includes LICENSE and THIRD_PARTY_NOTICES.md in built distributions. The license was adopted while the GitHub repository was Private. The owner subsequently authorized making the repository Public; no package or container image is published by that visibility change.
 
 ## Why MIT
 
